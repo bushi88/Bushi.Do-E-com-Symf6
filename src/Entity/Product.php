@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -28,6 +29,15 @@ class Product
     #[ORM\Column]
     private ?float $Price = null;
 
+    #[ORM\Column]
+    private ?int $quantity = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $tags = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
     #[ORM\Column(nullable: true)]
     private ?bool $isBestSeller = false;
 
@@ -46,21 +56,21 @@ class Product
     #[ORM\ManyToMany(targetEntity: Categories::class, inversedBy: 'products')]
     private Collection $category;
 
-    #[ORM\ManyToMany(targetEntity: TagsProduct::class, mappedBy: 'product')]
-    private Collection $tagsProducts;
-
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: RelatedProduct::class)]
     private Collection $relatedProducts;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ReviewsProduct::class)]
     private Collection $reviewsProducts;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
-        $this->tagsProducts = new ArrayCollection();
         $this->relatedProducts = new ArrayCollection();
         $this->reviewsProducts = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -201,33 +211,6 @@ class Product
     }
 
     /**
-     * @return Collection<int, TagsProduct>
-     */
-    public function getTagsProducts(): Collection
-    {
-        return $this->tagsProducts;
-    }
-
-    public function addTagsProduct(TagsProduct $tagsProduct): self
-    {
-        if (!$this->tagsProducts->contains($tagsProduct)) {
-            $this->tagsProducts->add($tagsProduct);
-            $tagsProduct->addProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTagsProduct(TagsProduct $tagsProduct): self
-    {
-        if ($this->tagsProducts->removeElement($tagsProduct)) {
-            $tagsProduct->removeProduct($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, RelatedProduct>
      */
     public function getRelatedProducts(): Collection
@@ -283,6 +266,54 @@ class Product
                 $reviewsProduct->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): self
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getTags(): ?string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?string $tags): self
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
