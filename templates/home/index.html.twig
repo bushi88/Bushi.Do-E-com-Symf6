@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HomePage
+{% endblock %}
+
+{% block body %}
+	{{ include("partials/title_section.html.twig", {'name':'Home page'} ) }}
+
+	<div class="container">
+		<h1>Hello
+			{{ controller_name }}</h1>
+	</div>
+{% endblock %}
