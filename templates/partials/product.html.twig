@@ -34,8 +34,8 @@
 				<a href="">{{product.name}}</a>
 			</h6>
 			<div class="product_price">
-				<span class="price">${{product.price/100}}</span>
-				<del>${{product.price*1.35/100}}</del>
+				<span class="price">${{ (product.price / 100) | round(2, 'floor') }}</span>
+				<del>${{ (product.price * 1.35 / 100) | round(2, 'floor') }}</del>
 				<div class="on_sale">
 					<span>35% Off</span>
 				</div>
@@ -50,12 +50,12 @@
 				<p>{{ product.description }}</p>
 			</div>
 			{# <div class="pr_switch_wrap">
-						<div class="product_color_switch">
-						<span class="active" data-color="#87554B"></span>
-						<span data-color="#333333"></span>
-						<span data-color="#DA323F"></span>
-						</div>
-						</div> #}
+			<div class="product_color_switch">
+			<span class="active" data-color="#87554B"></span>
+			<span data-color="#333333"></span>
+			<span data-color="#DA323F"></span>
+			</div>
+			</div> #}
 		</div>
 	</div>
 </div>

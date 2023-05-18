@@ -33,7 +33,7 @@
 											<td class="product-name" data-title="Product">
 												<a href="#">{{ element.product.name }}</a>
 											</td>
-											<td class="product-price" data-title="Price">${{ element.product.price / 100 }}</td>
+											<td class="product-price" data-title="Price">${{ (element.product.price / 100) | round(2, 'floor') }}</td>
 											<td class="product-quantity" data-title="Quantity">
 												<div class="quantity">
 													<a href="{{ path('app_cart_remove', {'id': element.product.id} ) }}" type="button" value="-" class="minus">
@@ -45,7 +45,7 @@
 													</a>
 												</div>
 											</td>
-											<td class="product-subtotal" data-title="Total">${{ element.quantity * element.product.price / 100 }}</td>
+											<td class="product-subtotal" data-title="Total">${{ (element.quantity * element.product.price / 100) | round(2, 'floor') }}</td>
 											<td class="product-remove" data-title="Remove">
 												<a href="{{ path('app_cart_delete', {'id': element.product.id} ) }}">
 													<i class="ti-close"></i>
@@ -89,16 +89,16 @@
 									<tbody>
 										<tr>
 											<td class="cart_total_label">Cart Subtotal HT</td>
-											<td class="cart_total_amount">${{ subTotal }}</td>
+											<td class="cart_total_amount">${{ subTotal | round(2, 'floor') }}</td>
 										</tr>
                                         <tr>
 											<td class="cart_total_label">Tax 20%</td>
-											<td class="cart_total_amount">${{ subTotal * 0.2 }}</td>
+											<td class="cart_total_amount">${{ (subTotal * 0.2) | round(2, 'floor') }}</td>
 										</tr>
 										<tr>
 											<td class="cart_total_label">Total</td>
 											<td class="cart_total_amount">
-												<strong>${{ subTotal * 1.2 }}</strong>
+												<strong>${{ (subTotal * 1.2) | round(2, 'floor') }}</strong>
 											</td>
 										</tr>
 									</tbody>

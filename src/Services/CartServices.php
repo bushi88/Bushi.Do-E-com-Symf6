@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Entity\Product;
-use App\Entity\Categories;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -85,7 +84,10 @@ class CartServices
     // Met à jour le contenu du panier avec un tableau de produits et leurs quantités
     public function updateCart($cart)
     {
-        $this->getSession()->set('cart', $cart);;
+        $this->getSession()->set('cart', $cart);
+
+        // pour récupérer toutes les données du panier dans la session (section 20 - cours 21)
+        $this->getSession()->set('cartData', $this->getFullCart());
     }
 
     // Récupère le contenu actuel du panier

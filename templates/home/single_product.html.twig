@@ -31,8 +31,8 @@
 								<a href="#">{{product.name}}</a>
 							</h4>
 							<div class="product_price">
-								<span class="price">${{product.price/100}}</span>
-								<del>${{product.price*1.35/100}}</del>
+								<span class="price">${{ (product.price / 100) | round(2, 'floor') }}</span>
+								<del>${{ (product.price * 1.35/100) | round(2, 'floor') }}</del>
 								<div class="on_sale">
 									<span>35% Off</span>
 								</div>
