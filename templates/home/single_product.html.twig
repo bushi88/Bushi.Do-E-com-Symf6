@@ -8,8 +8,8 @@
 	{{ include("partials/title_section.html.twig", {'name':'Product Details'} ) }}
 
 	{# <pre>
-	{{ dump(product) }}
-	</pre> #}
+		{{ dump(product) }}
+		</pre> #}
 
 	<div class="section">
 		<div class="container">
@@ -61,18 +61,19 @@
 							</div>
 						</div>
 						<hr/>
-						<div class="cart_extra">
-							<div class="cart-product-quantity">
-								<div class="quantity">
-									<input type="button" value="-" class="minus">
-									<input type="text" name="quantity" value="1" title="Qty" class="qty" size="4">
-									<input type="button" value="+" class="plus">
-								</div>
-							</div>
+						<div
+							class="cart_extra">
+							{# <div class="cart-product-quantity">
+															<div class="quantity">
+																<input type="button" value="-" class="minus">
+																<input type="text" name="quantity" value="1" title="Qty" class="qty" size="4">
+																<input type="button" value="+" class="plus">
+															</div>
+														</div> #}
 							<div class="cart_btn">
-								<button class="btn btn-fill-out btn-addtocart" type="button">
+								<a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-fill-out btn-addtocart" type="button">
 									<i class="icon-basket-loaded"></i>
-									Add to cart</button>
+									Add to cart</a>
 								<a class="add_compare" href="#">
 									<i class="icon-shuffle"></i>
 								</a>
@@ -254,8 +255,10 @@
 					</div>
 					<div class="releted_product_slider carousel_slider owl-carousel owl-theme" data-margin="20" data-responsive='{"0":{"items": "1"}, "481":{"items": "2"}, "768":{"items": "3"}, "1199":{"items": "4"}}'>
 						{% for category in product.category %}
-							{% for product in category.products %}
-								{{include('partials/product_item.html.twig', {'product': product}) }}
+							{% for productReleted in category.products %}
+								{% if product is not same as productReleted %}
+									{{include('partials/product_item.html.twig', {'product': productReleted}) }}
+								{% endif %}
 							{% endfor %}
 						{% endfor %}
 					</div>

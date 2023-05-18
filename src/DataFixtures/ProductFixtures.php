@@ -18,8 +18,8 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
-        $faker->seed(2332); // même jeu de données à chaque fois en utilisant la méthode seed()
-        for ($i = 1; $i <= 20; $i++) {
+        $faker->seed(1234); // même jeu de données à chaque fois en utilisant la méthode seed()
+        for ($i = 1; $i <= 100; $i++) {
 
             $product = new Product();
             $product->setname('produit ' . $faker->sentence($nbWords = 1, $variableNbWords = true));
@@ -30,6 +30,10 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             $product->setTags($faker->sentence(4));
             $product->setSlug($this->slugger->slug($product->getName()));
             $product->setImage('image.jpg');
+            $product->setIsBestSeller(rand(0,1));
+            $product->setIsNewArrival(rand(0,1));
+            $product->setIsFeatured(rand(0,1));
+            $product->setIsSpecialOffer(rand(0,1));
             $category = $this->getReference('category_' . rand(1, 3));
             $product->addCategory($category);
             $manager->persist($product);

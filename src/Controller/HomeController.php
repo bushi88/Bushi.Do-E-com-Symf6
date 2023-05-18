@@ -23,6 +23,7 @@ class HomeController extends AbstractController
         // dd($products);
         // dd([$productBestSeller, $productSpecialOffer, $productNewArrival, $productFeatured]);
 
+
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
             'products' => $products,
