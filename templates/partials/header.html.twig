@@ -5,7 +5,6 @@
 		<span></span>
 	</div>
 </div>
-
 <header class="header_wrap fixed-top header_with_topbar">
 	<div class="top-header">
 		<div class="container">
@@ -108,15 +107,12 @@
 						</li>
 						<li class="">
 							<a class=" nav-link" href="#" data-toggle="dropdown">Products</a>
-
 						</li>
 						<li class="dropdown">
 							<a class=" nav-link" href="#" data-toggle="dropdown">Blog</a>
-
 						</li>
 						<li class="">
 							<a class=" nav-link" href="#" data-toggle="dropdown">Shop</a>
-
 						</li>
 						<li>
 							<a class="nav-link nav_item" href="#">Contact Us</a>
@@ -143,28 +139,25 @@
 					</li>
 					<li class="dropdown cart_dropdown">
 						<a class="nav-link cart_trigger" href="#" data-toggle="dropdown">
-							{% set quantity = 0 %}
-							{% for element in app.session.get('cartData') %}
-								{% set quantity = quantity + element.quantity %}
-							{% endfor %}
 							<i class="linearicons-cart"></i>
-							<span class="cart_count">{{quantity}}</span>
+							<span class="cart_count">
+								{% if app.session.get('cart') %}
+									{{ app.session.get('cartData').data.quantity_cart }}
+								{% else %}
+									0
+								{% endif %}
+							</span>
 						</a>
 						<div class="cart_box dropdown-menu dropdown-menu-right">
 							<ul class="cart_list">
-								{% if app.session.get('cartData')  %}
-									{% set subTotal = 0 %}
-									{% for element in app.session.get('cartData') %}
-										{% set subTotal = subTotal + (element.quantity * element.product.price / 100) %}
+								{% if app.session.get('cart') %}
+									{% for element in app.session.get('cartData').products %}
 										<li>
 											<a href="{{ path('app_cart_delete', {'id': element.product.id} ) }}" class="item_remove">
 												<i class="ion-close"></i>
 											</a>
 											<a href="#"><img src="{{ asset('assets/uploads/products/'~ element.product.image) }}" alt="{{element.product.name}}">{{element.product.name}}</a>
-											<span class="cart_quantity">
-												{{element.quantity}}
-												x
-												<span class="cart_amount">
+											<span class="cart_quantity">{{element.quantity}}x<span class="cart_amount">
 													<span class="price_symbole">$</span>
 												</span>
 												{{ (element.product.price / 100) | round(2, 'floor') }}</span>
@@ -174,21 +167,20 @@
 									<li>Your cart is empty !</li>
 								{% endif %}
 							</ul>
-							{% if app.session.get('cartData')  %}
+							{% if app.session.get('cartData') %}
 								<div class="cart_footer">
 									<p class="cart_total">
-										<strong>Subtotal HT :</strong>
+										<strong>total TTC :</strong>
 										<span class="cart_price">
 											<span class="price_symbole">$</span>
 										</span>
-										{{ subTotal | round(2, 'floor') }}</p>
+										{{ app.session.get('cartData').data.subTotalTTC }}</p>
 									<p class="cart_buttons">
 										<a href="{{ path('app_cart_show') }}" class="btn btn-fill-line rounded-0 view-cart">View Cart</a>
-										<a href="#" class="btn btn-fill-out rounded-0 checkout">Checkout</a>
+										<a href="{{ path('app_checkout_show') }}" class="btn btn-fill-out rounded-0 checkout">Checkout</a>
 									</p>
 								</div>
 							{% endif %}
-
 						</div>
 					</li>
 				</ul>
@@ -196,5 +188,4 @@
 		</div>
 	</div>
 </header>
-
 {# <pre>{{dump(app.session)}}</pre> #}

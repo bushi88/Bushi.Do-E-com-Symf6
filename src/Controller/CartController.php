@@ -22,7 +22,8 @@ class CartController extends AbstractController
     {
         $cart = $this->cartServices->getFullCart();
 
-        if (!$cart) {
+        // si $cart['products'] n'est pas défini
+        if (!isset($cart['products'])) {
             return $this->redirectToRoute('app_home');
         }
 

@@ -4,15 +4,30 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Form\AddressType;
+use App\Services\CartServices;
 use App\Repository\AddressRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/address', name: 'app_address_')]
 class AddressController extends AbstractController
 {
+    private $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
+    private function getSession(): SessionInterface
+    {
+        return $this->requestStack->getSession();
+    }
+
     #[Route('/', name: 'index', methods: ['GET'])]
     public function index(AddressRepository $addressRepository): Response
     {
@@ -22,7 +37,7 @@ class AddressController extends AbstractController
     }
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AddressRepository $addressRepository): Response
+    public function new(Request $request, AddressRepository $addressRepository, CartServices $cartServices): Response
     {
         $address = new Address();
         $form = $this->createForm(AddressType::class, $address);
@@ -35,6 +50,10 @@ class AddressController extends AbstractController
             $address->setUser($user);
 
             $addressRepository->save($address, true);
+
+            if ($cartServices->getFullCart()) {
+                return $this->redirectToRoute('app_checkout_show');
+            }
 
             $this->addFlash('address_message', 'Your address has been saved');
 
@@ -63,6 +82,14 @@ class AddressController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $addressRepository->save($address, true);
+
+            if ($this->requestStack->getSession()->get('checkout_data')) {
+                $data = $this->requestStack->getSession()->get('checkout_data');
+                $data['address'] = $address;
+                $this->requestStack->getSession()->set('checkout_data', $data);
+
+                return $this->redirectToRoute('app_checkout_confirm');
+            }
 
             $this->addFlash('address_message', 'Your address has been edited');
 

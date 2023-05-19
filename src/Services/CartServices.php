@@ -11,6 +11,7 @@ class CartServices
 {
     private $requestStack;
     private $em;
+    private $tva = 0.2;
 
     public function __construct(EntityManagerInterface $em, RequestStack $requestStack)
     {
@@ -106,20 +107,32 @@ class CartServices
 
         $fullCart = [];
 
+        $quantity_cart = 0;
+        $subTotal = 0;
+
         foreach ($cart as $id => $quantity) {
             $product = $this->em->getRepository(Product::class)->find($id);
             // si le produit a été récupéré avec succès
             if ($product) {
-                $fullCart[] = [
+                $fullCart['products'][] = [
                     "quantity" => $quantity,
                     "product" => $product
                 ];
+                $quantity_cart += $quantity;
+                $subTotal += $quantity * $product->getPrice() / 100;
             }
             // L'ID du produit est incorrect, donc il est supprimé du panier
             else {
                 $this->deleteFromCart($id);
             }
         }
+
+        $fullCart['data'] = [
+            "quantity_cart" => $quantity_cart,
+            "subTotalHT" => $subTotal,
+            "tax" => round($subTotal * $this->tva, 2),
+            "subTotalTTC" => round(($subTotal + ($subTotal * $this->tva)), 2),
+        ];
 
         return $fullCart;
     }
