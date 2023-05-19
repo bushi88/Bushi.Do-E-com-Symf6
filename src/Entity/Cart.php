@@ -2,15 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CartRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Entity(repositoryClass: OrderRepository::class)]
-#[ORM\Table(name: '`order`')]
-class Order
+#[ORM\Entity(repositoryClass: CartRepository::class)]
+#[ORM\Table(name: '`cart`')]
+class Cart
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -41,10 +42,10 @@ class Order
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'orders', targetEntity: OrderDetails::class)]
-    private Collection $orderDetails;
+    #[ORM\OneToMany(mappedBy: 'carts', targetEntity: CartDetails::class)]
+    private Collection $cartDetails;
 
-    #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[ORM\ManyToOne(inversedBy: 'carts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
@@ -62,7 +63,8 @@ class Order
 
     public function __construct()
     {
-        $this->orderDetails = new ArrayCollection();
+        $this->cartDetails = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -167,29 +169,29 @@ class Order
     }
 
     /**
-     * @return Collection<int, OrderDetails>
+     * @return Collection<int, CartDetails>
      */
-    public function getOrderDetails(): Collection
+    public function getCartDetails(): Collection
     {
-        return $this->orderDetails;
+        return $this->cartDetails;
     }
 
-    public function addOrderDetail(OrderDetails $orderDetail): self
+    public function addOrderDetail(CartDetails $cartDetail): self
     {
-        if (!$this->orderDetails->contains($orderDetail)) {
-            $this->orderDetails->add($orderDetail);
-            $orderDetail->setOrders($this);
+        if (!$this->cartDetails->contains($cartDetail)) {
+            $this->cartDetails->add($cartDetail);
+            $cartDetail->setCarts($this);
         }
 
         return $this;
     }
 
-    public function removeOrderDetail(OrderDetails $orderDetail): self
+    public function removeOrderDetail(CartDetails $cartDetail): self
     {
-        if ($this->orderDetails->removeElement($orderDetail)) {
+        if ($this->cartDetails->removeElement($cartDetail)) {
             // set the owning side to null (unless already changed)
-            if ($orderDetail->getOrders() === $this) {
-                $orderDetail->setOrders(null);
+            if ($cartDetail->getCarts() === $this) {
+                $cartDetail->setCarts(null);
             }
         }
 
@@ -252,6 +254,28 @@ class Order
     public function setSubTotalTTC(float $subTotalTTC): self
     {
         $this->subTotalTTC = $subTotalTTC;
+
+        return $this;
+    }
+
+    public function addCartDetail(CartDetails $cartDetail): self
+    {
+        if (!$this->cartDetails->contains($cartDetail)) {
+            $this->cartDetails->add($cartDetail);
+            $cartDetail->setCarts($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartDetail(CartDetails $cartDetail): self
+    {
+        if ($this->cartDetails->removeElement($cartDetail)) {
+            // set the owning side to null (unless already changed)
+            if ($cartDetail->getCarts() === $this) {
+                $cartDetail->setCarts(null);
+            }
+        }
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\CheckoutType;
 use App\Services\CartServices;
+use App\Services\OrderServices;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,7 +64,7 @@ class CheckoutController extends AbstractController
     }
 
     #[Route('/confirm', name: 'confirm')]
-    public function confirm(Request $request): Response
+    public function confirm(Request $request, OrderServices $orderservices): Response
     {
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
@@ -104,6 +105,11 @@ class CheckoutController extends AbstractController
             $address = $data['address'];
             $carrier = $data['carrier'];
             $informations = $data['informations'];
+
+            // Sauvegarde du panier
+            $cart['checkout'] = $data;
+            $reference = $orderservices->saveCart($cart, $user);
+            dd($reference);
 
             // Afficher la vue de confirmation de commande avec les données nécessaires
             return $this->render('checkout/confirm.html.twig', [
