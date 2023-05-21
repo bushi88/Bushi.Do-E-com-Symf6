@@ -62,6 +62,11 @@
 										and
 										<a href="javascript:void(0);" onclick="$('#account-detail-tab').trigger('click')">edit your password and account details.</a>
 									</p>
+									{% if is_granted('ROLE_ADMIN') %}
+										<a href="{{ path('app_admin') }}" target="_blank" class="btn btn-fill-out me-2" title="Tableau de bord">
+											<i class="ti-user"></i><span>Access to the BackOffice</span>
+										</a>
+									{% endif %}
 								</div>
 							</div>
 						</div>
@@ -70,41 +75,45 @@
 								<div class="card-header">
 									<h3>Orders</h3>
 								</div>
-								<div class="card-body">
-									<div class="table-responsive">
-										<table class="table">
-											<thead>
-												<tr>
-													<th>Order</th>
-													<th>Date</th>
-													<th>Status</th>
-													<th>Total</th>
-													<th>Actions</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>#1234</td>
-													<td>March 15, 2020</td>
-													<td>Processing</td>
-													<td>$78.00 for 1 item</td>
-													<td>
-														<a href="#" class="btn btn-fill-out btn-sm">View</a>
-													</td>
-												</tr>
-												<tr>
-													<td>#2366</td>
-													<td>June 20, 2020</td>
-													<td>Completed</td>
-													<td>$81.00 for 1 item</td>
-													<td>
-														<a href="#" class="btn btn-fill-out btn-sm">View</a>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+								{% if orders %}
+									<div class="card-body">
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+													<tr>
+														<th>Order</th>
+														<th>Date</th>
+														<th>Status</th>
+														<th>Total</th>
+														<th>Actions</th>
+													</tr>
+												</thead>
+												<tbody>
+													{% for order in orders %}
+														<tr>
+															<td>{{ order.id }}</td>
+															<td>{{ order.createdAt | date('d/m/Y') }}</td>
+															<td>Processing</td>
+															<td>${{ order.subTotalTTC / 100 }}
+																for
+																{{ order.quantity }}
+																items</td>
+															<td>
+																<a href="{{ path('app_account_detail', {'id': order.id}) }}" class="btn btn-fill-out btn-sm">View</a>
+															</td>
+														</tr>
+													{% endfor %}
+												</tbody>
+											</table>
+										</div>
 									</div>
-								</div>
+
+								{% else %}
+									<div>Sorry
+										{{app.user.fullname}}. You didn't place any order yet !</div>
+								{% endif %}
+
+
 							</div>
 						</div>
 						<div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">

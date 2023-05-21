@@ -1,20 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello StripeSuccessPaymentController!{% endblock %}
+{% block title %}
+Order Completed!
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+{{ include("partials/title_section.html.twig", {'name':'Payment Success!'} ) }}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/laragon/www/Udemy_formation_Symfony/E-commerce-Symfony/src/Controller/Stripe/StripeSuccessPaymentController.php'|file_link(0) }}">src/Controller/Stripe/StripeSuccessPaymentController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/laragon/www/Udemy_formation_Symfony/E-commerce-Symfony/templates/stripe/stripe_success_payment/index.html.twig'|file_link(0) }}">templates/stripe/stripe_success_payment/index.html.twig</a></code></li>
-    </ul>
-</div>
+<section class="checkout">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="text-center order-complete">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="heading">
+                        <h3>Thank you, {{ order.user.firstname }} {{ order.user.lastname }}!</h3>
+                    </div>
+                    <div class="order-details">
+                        <p>Payment made successfully!</p>
+                        <p>Payment for order number <strong>{{ order.reference }}</strong> has been accepted.</p>
+                        <p>Your payment is currently "pending verification". Payments are usually verified within 1 hour.
+                            After verification, the seller will begin to process your order. During this time, you will not be able to change your order.</p>
+                        <p>Thank you for your order! Your order is being processed and will be completed within 3-6 hours.
+                            You will receive an email confirmation when your order is completed.</p>
+                    </div>
+                    <a href="{{ path('app_home') }}" class="btn btn-fill-out">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

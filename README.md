@@ -1,8 +1,7 @@
 ## Bushi.Do - Site E-commerce
 
-Bushi.Do est un site e-commerce construit avec le framework Symfony,
-à l'aide du tutoriel "Apprendre Symfony 5 et 6 par un blog et un site e-Commerce"
-Plateforme : Ûdemy  -  Formateur : Mr. Espero Akpoli
+Bushi.Do est un site e-commerce construit avec le framework Symfony
+
 
 ## ⚙️ Installation
 
@@ -15,15 +14,18 @@ Plateforme : Ûdemy  -  Formateur : Mr. Espero Akpoli
     Effectuez les migrations php bin/console doctrine:migrations:migrate
     Chargez les fixtures php bin/console doctrine:fixtures:load
 
+
 ## Utilisation
 
     Lancez le serveur Symfony symfony server:start
     Rendez-vous sur http://localhost:8000
 
+
 ## Fonctionnalités
 
     Inscription et connexion des utilisateurs
-    Dashboard compte utilisateur (gestion données personnelles, adresses, historique des commandes)
     Ajout et suppression de produits dans le panier
     Passer une commande
-    Interface d'administration
+    Paiement Stripe
+    Dashboard compte utilisateur
+    Interface pour l'administration du site

@@ -60,6 +60,9 @@ class Order
     #[ORM\Column]
     private ?float $subTotalTTC = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $StripeCheckoutSessionId = null;
+
     public function __construct()
     {
         $this->orderDetails = new ArrayCollection();
@@ -108,7 +111,7 @@ class Order
 
     public function getCarrierPrice(): ?float
     {
-        return $this->carrierPrice;
+        return $this->carrierPrice*100;
     }
 
     public function setCarrierPrice(float $carrierPrice): self
@@ -130,7 +133,7 @@ class Order
         return $this;
     }
 
-    public function isIsPaid(): ?bool
+    public function getIsPaid(): ?bool
     {
         return $this->isPaid;
     }
@@ -222,7 +225,7 @@ class Order
 
     public function getSubTotalHT(): ?float
     {
-        return $this->subTotalHT;
+        return $this->subTotalHT*100;
     }
 
     public function setSubTotalHT(float $subTotalHT): self
@@ -234,7 +237,7 @@ class Order
 
     public function getTax(): ?float
     {
-        return $this->Tax;
+        return $this->Tax*100;
     }
 
     public function setTax(float $Tax): self
@@ -246,12 +249,24 @@ class Order
 
     public function getSubTotalTTC(): ?float
     {
-        return $this->subTotalTTC;
+        return $this->subTotalTTC*100;
     }
 
     public function setSubTotalTTC(float $subTotalTTC): self
     {
         $this->subTotalTTC = $subTotalTTC;
+
+        return $this;
+    }
+
+    public function getStripeCheckoutSessionId(): ?string
+    {
+        return $this->StripeCheckoutSessionId;
+    }
+
+    public function setStripeCheckoutSessionId(?string $StripeCheckoutSessionId): self
+    {
+        $this->StripeCheckoutSessionId = $StripeCheckoutSessionId;
 
         return $this;
     }

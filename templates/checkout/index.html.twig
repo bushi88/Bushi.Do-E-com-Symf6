@@ -5,7 +5,6 @@
 
 {% block body %}
 	{{ include("partials/title_section.html.twig", {'name':'Checkout'}) }}
-
 	<div class="section checkout">
 		<div class="container">
 			{{ form_start(checkout, {action: path('app_checkout_confirm')}) }}

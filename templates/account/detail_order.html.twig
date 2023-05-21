@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Order details
+{% endblock %}
+
+{% block body %}
+	{{ include("partials/title_section.html.twig", {'name':'Details Order'} ) }}
+
+	<div class="section">
+		<div class="container">
+            <div>
+                <div class="order-reference mb-2">
+                    <div><strong>Reference : </strong>{{ order.reference }}</div>
+                    <div><strong>Date : </strong>{{ order.createdAt | date('d/m/Y') }}</div>
+                </div>
+            </div>
+			<div class="row">
+				<div class="col-12">
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead class="table-primary">
+								<tr>
+									<th class="product-id">Id</th>
+									<th class="product-name">Product</th>
+									<th class="product-price">Price</th>
+									<th class="product-quantity">Quantity</th>
+									<th class="product-subTotalHT">SubTotal HT</th>
+									<th class="product-tax">Tax</th>
+									<th class="product-subTotalTTC">SubTotal TTC</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for element in order.orderDetails %}
+									<tr>
+										<td class="product-id">{{ element.id }}</td>
+										<td class="product-name">{{ element.productName }}</td>
+										<td class="product-price">${{ element.productPrice }}</td>
+										<td class="product-quantity">{{ element.quantity }}</td>
+										<td class="product-subTotalHT">${{ element.subTotalHT }}</td>
+										<td class="product-tax">${{ element.tax }}</td>
+										<td class="product-subTotalTTC">${{ element.subTotalTTC }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="divider text-center">
+						<i class="ti-shopping-cart-full"></i>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6"></div>
+				<div class="col-md-6">
+					<div class="border p-3 p-md-4">
+						<div class="heading_s1 mb-3">
+							<h6>Order Totals</h6>
+						</div>
+						<div class="table-responsive">
+							<table class="table">
+								<tbody>
+									<tr>
+										<td class="cart_total_label">Subtotal HT</td>
+										<td class="cart_total_amount">${{ order.subTotalHT / 100 }}</td>
+									</tr>
+									<tr>
+										<td class="cart_total_label">Shipping ({{ order.carrierName }})</td>
+										<td class="cart_total_amount">${{ order.carrierPrice / 100 }}</td>
+									</tr>
+									<tr>
+										<td class="cart_total_label">Tax 20%</td>
+										<td class="cart_total_amount">${{ order.tax / 100 }}</td>
+									</tr>
+									<tr>
+										<td class="cart_total_label">Total TTC</td>
+										<td class="cart_total_amount">
+											<strong>${{ order.subTotalTTC / 100 }}</strong>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<a href="{{ path('app_account') }}" class="btn btn-fill-out">Back To Account</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

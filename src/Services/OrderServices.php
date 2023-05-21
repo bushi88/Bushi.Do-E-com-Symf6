@@ -26,15 +26,15 @@ class OrderServices
         $order = new Order();
         $order->setReference($cart->getReference())
             ->setFullname($cart->getFullName())
-            ->setCarrierName($cart->getName()())
-            ->setCarrierPrice($cart->getPrice() / 100)
+            ->setCarrierName($cart->getCarrierName())
+            ->setCarrierPrice($cart->getCarrierPrice() / 100)
             ->setDeliveryAddress($cart->getDeliveryAddress())
-            ->setMoreInformation($cart->getMoreInformations())
+            ->setMoreInformation($cart->getMoreInformation())
             ->setCreatedAt($cart->getCreatedAt())
             ->setUser($cart->getUser())
             ->setQuantity($cart->getQuantity())
             ->setSubTotalHT($cart->getSubTotalHT() / 100)
-            ->setTax($cart->getTaxe() / 100)
+            ->setTax($cart->getTax() / 100)
             ->setSubTotalTTC($cart->getSubTotalTTC() / 100);
         $this->em->persist($order);
 
@@ -44,10 +44,10 @@ class OrderServices
             $orderDetails->setOrders($order)
                 ->setProductName($cart_product->getProductName())
                 ->setProductPrice($cart_product->getProductPrice())
-                ->setQuantity($cart_product->getProductQuantity())
-                ->setSubTotalHt($cart_product->getSubTotalHt())
-                ->setTax($cart_product->getTaxe())
-                ->setSubTotalTtc($cart_product->getSubTotalTtc());
+                ->setQuantity($cart_product->getQuantity())
+                ->setSubTotalHT($cart_product->getSubTotalHT())
+                ->setTax($cart_product->getTax())
+                ->setSubTotalTTC($cart_product->getSubTotalTTC());
 
             $this->em->persist($orderDetails);
         }
@@ -83,7 +83,7 @@ class OrderServices
         $line_items[] = [
             'price_data' => [
                 'currency' => 'usd',
-                'unit_amount' => $cart->getCarrierPrice() * 100, // nb entier impératif
+                'unit_amount' => $cart->getCarrierPrice(), // nb entier impératif
                 'product_data' => [
                     'name' => 'Carrier (' . $cart->getCarrierName() . ')',
                     'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/'],
@@ -96,7 +96,7 @@ class OrderServices
         $line_items[] = [
             'price_data' => [
                 'currency' => 'usd',
-                'unit_amount' => $cart->getTax() * 100, // nb entier impératif
+                'unit_amount' => $cart->getTax(), // nb entier impératif
                 'product_data' => [
                     'name' => 'tva (20%)',
                     'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/'],
