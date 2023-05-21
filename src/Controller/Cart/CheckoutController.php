@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Cart;
 
 use App\Form\CheckoutType;
 use App\Services\CartServices;
@@ -109,7 +109,6 @@ class CheckoutController extends AbstractController
             // Sauvegarde du panier
             $cart['checkout'] = $data;
             $reference = $orderservices->saveCart($cart, $user);
-            dd($reference);
 
             // Afficher la vue de confirmation de commande avec les données nécessaires
             return $this->render('checkout/confirm.html.twig', [
@@ -117,6 +116,7 @@ class CheckoutController extends AbstractController
                 'address' => $address,
                 'carrier' => $carrier,
                 'informations' => $informations,
+                'reference' => $reference,
                 'checkout' => $form->createView(),
             ]);
         }

@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Bushi.DO | Checkout Confirm
-{% endblock %}
+{% block title %}
+	Bushi.DO | Checkout Confirm
+{% endblock title %}
+
+{% block scriptStripe %}
+    <script src="https://js.stripe.com/v3/"></script>
+{% endblock scriptStripe %}
 
 {% block body %}
 	{{ include("partials/title_section.html.twig", {'name':'Checkout'}) }}
@@ -84,7 +89,7 @@
 							<div class="heading_s1">
 								<h4>Payment</h4>
 							</div>
-							<button type="submit" id="checkout" class="btn btn-fill-out btn-block">Paid ${{ cart.data.subTotalTTC + (carrier.price / 100) }}</button>
+							<button type="submit" id="checkout-button" class="btn btn-fill-out btn-block">Paid ${{ cart.data.subTotalTTC + (carrier.price / 100) }}</button>
 						</div>
 					</div>
 				</div>
@@ -92,3 +97,34 @@
 		</div>
 	</div>
 {% endblock body %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+    // This is your test publishable API key.
+    var stripe = Stripe("pk_test_51N9YNWBXvDul9G0YVn7QrwJpdvx9QyWKQdLtDBcNuMeYFVDFAHL0mHPxV6y0sLAOJohMHdihHuiecl75N8MBePiG00JkgvE60t");
+    var checkoutButton = document.getElementById("checkout-button");
+
+    checkoutButton.addEventListener("click", function () {
+      fetch("/create-checkout-session/{{ reference }}", {
+        method: "POST",
+      })
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (session) {
+          return stripe.redirectToCheckout({ sessionId: session.id });
+        })
+        .then(function (result) {
+          // If redirectToCheckout fails due to a browser or network
+          // error, you should display the localized error message to your
+          // customer using error.message.
+          if (result.error) {
+            alert(result.error.message);
+          }
+        })
+        .catch(function (error) {
+          console.error("Error:", error);
+        });
+    });
+    </script>
+{% endblock %}

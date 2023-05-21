@@ -25,7 +25,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             $product->setname('produit ' . $faker->sentence($nbWords = 1, $variableNbWords = true));
             $product->setDescription($faker->sentence(4));
             $product->setMoreInformation($faker->paragraph());
-            $product->setPrice($faker->randomFloat(2, 5, 9900)); // 2 decimales et nb entre 5 et 99
+            $product->setPrice(rand(500, 10000));
             $product->setQuantity($faker->numberBetween(1, 100));
             $product->setTags($faker->sentence(4));
             $product->setSlug($this->slugger->slug($product->getName()));

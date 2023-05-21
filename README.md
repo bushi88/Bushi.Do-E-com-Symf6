@@ -23,6 +23,7 @@ Plateforme : Ûdemy  -  Formateur : Mr. Espero Akpoli
 ## Fonctionnalités
 
     Inscription et connexion des utilisateurs
+    Dashboard compte utilisateur (gestion données personnelles, adresses, historique des commandes)
     Ajout et suppression de produits dans le panier
     Passer une commande
-    Affichage de l'historique des commandes
+    Interface d'administration

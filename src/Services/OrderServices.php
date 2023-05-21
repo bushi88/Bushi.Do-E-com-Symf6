@@ -6,16 +6,19 @@ use App\Entity\Cart;
 use App\Entity\Order;
 use App\Entity\CartDetails;
 use App\Entity\OrderDetails;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class OrderServices
 {
 
     private $em;
+    private $repoProduct;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, ProductRepository $repoProduct)
     {
         $this->em = $em;
+        $this->repoProduct = $repoProduct;
     }
 
     public function createOrder($cart)
@@ -54,8 +57,55 @@ class OrderServices
         return $order;
     }
 
-    public function getLineItems()
+    public function getLineItems($cart)
     {
+        $cartDetails = $cart->getCartDetails();
+
+        $line_items = [];
+
+        foreach ($cartDetails as $details) {
+            $product = $this->repoProduct->findOneByName($details->getProductName());
+
+            $line_items[] = [
+                'price_data' => [
+                    'currency' => 'usd',
+                    'unit_amount' => $product->getPrice(), // nb entier impératif
+                    'product_data' => [
+                        'name' => $product->getName(),
+                        'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/' . $product->getImage()],
+                    ],
+                ],
+                'quantity' => $details->getQuantity(),
+            ];
+        }
+
+        // Ajout du transporteur
+        $line_items[] = [
+            'price_data' => [
+                'currency' => 'usd',
+                'unit_amount' => $cart->getCarrierPrice() * 100, // nb entier impératif
+                'product_data' => [
+                    'name' => 'Carrier (' . $cart->getCarrierName() . ')',
+                    'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/'],
+                ],
+            ],
+            'quantity' => 1,
+        ];
+
+        // ajout de la taxe
+        $line_items[] = [
+            'price_data' => [
+                'currency' => 'usd',
+                'unit_amount' => $cart->getTax() * 100, // nb entier impératif
+                'product_data' => [
+                    'name' => 'tva (20%)',
+                    'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/'],
+                ],
+            ],
+            'quantity' => 1,
+        ];
+
+        return $line_items;
     }
 
     public function saveCart($data, $user)
